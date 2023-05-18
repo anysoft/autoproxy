@@ -34,7 +34,6 @@ with open(output_file, "w") as file:
     # 写入 gfwlist 文件内容
     gfwlist_lines_decoded = ''
     for line in gfwlist_lines:
-        print(len(line))
         line = line.strip()
         decode_line = base64.b64decode(line).decode("utf-8")
         if decode_line.endswith("@cn"):
