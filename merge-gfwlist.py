@@ -26,10 +26,10 @@ descs = [
 ]
 
 with open(output_file, "w") as file:
-    for item in descs:
-        file.write(base64.b64encode(item.encode("utf-8")).decode("utf-8"))
-        file.write("\n")
-    file.write("\n")
+    # for item in descs:
+    #     file.write(base64.b64encode(item.encode("utf-8")).decode("utf-8"))
+    #     file.write("\n")
+    # file.write("\n")
 
     # 写入 gfwlist 文件内容
     for line in gfwlist_lines:
@@ -37,10 +37,9 @@ with open(output_file, "w") as file:
         decode_line = base64.b64decode(line).decode("utf-8")
         if decode_line.endswith("@cn"):
             continue
-        file.write(line + "\n")
+        file.write(decode_line + "\n")
 
     # 写入个人维护的规则文件内容
     for line in personal_rules_lines:
-        encoded_line = base64.b64encode(line.encode("utf-8")).decode("utf-8")
-        file.write(encoded_line.strip() + "\n")
-
+        # encoded_line = base64.b64encode(line.encode("utf-8")).decode("utf-8")
+        file.write(line.strip() + "\n")
