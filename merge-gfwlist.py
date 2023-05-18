@@ -32,14 +32,33 @@ with open(output_file, "w") as file:
     # file.write("\n")
 
     # 写入 gfwlist 文件内容
+    gfwlist_lines_decoded = ''
     for line in gfwlist_lines:
+        print(len(line))
         line = line.strip()
         decode_line = base64.b64decode(line).decode("utf-8")
         if decode_line.endswith("@cn"):
             continue
-        file.write(decode_line + "\n")
+        gfwlist_lines_decoded += decode_line
+    gfwlist_lists = gfwlist_lines_decoded.splitlines()
 
     # 写入个人维护的规则文件内容
+    gfwlist_lists.insert(len(gfwlist_lists) - 1, '\n!################Personal Sart##################')
     for line in personal_rules_lines:
-        # encoded_line = base64.b64encode(line.encode("utf-8")).decode("utf-8")
-        file.write(line.strip() + "\n")
+        line = line.strip()
+        gfwlist_lists.insert(len(gfwlist_lists) - 1, line)
+    gfwlist_lists.insert(len(gfwlist_lists) - 1, '!################Personal End##################')
+    # 每行末尾加上换行 \n 输出一个完整字符串
+    gfwlist_lines_decoded = "\n".join(str(x) for x in gfwlist_lists)
+    # 整个字符串进行 base64
+    gfwlist_lines_decoded = base64.b64encode(gfwlist_lines_decoded.encode('utf-8')).decode('utf-8')
+    # 按64字符拆分数组
+    gfwlist_lists = [gfwlist_lines_decoded[i:i + 64] for i in range(0, len(gfwlist_lines_decoded), 64)]
+
+    # # 对数组每个元素base64
+    # gfwlist_lists = [base64.b64encode(element.encode('utf-8')).decode('utf-8') for element in gfwlist_lists]
+
+    # 每行末尾加上换行 \n 输出一个完整字符串
+    gfwlist_lines_decoded = "\n".join(str(x) for x in gfwlist_lists)
+
+    file.write(gfwlist_lines_decoded)
