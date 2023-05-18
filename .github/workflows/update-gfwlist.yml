@@ -22,6 +22,7 @@ jobs:
         run: pip install requests
       
       - name: Check upstream repository
+        id: check
         run: |
           last_commit=$(curl --silent "https://api.github.com/repos/gfwlist/gfwlist/commits?per_page=1" | grep -oP '(?<="date": ")[^"]+')
           last_commit_date=$(echo "$last_commit" | head -n1)
@@ -29,13 +30,13 @@ jobs:
           current_date=$(date -u +%s)
           time_diff=$((current_date - last_commit_date))
           if ((time_diff < 8886400)); then
-            echo "::set-output name=updated::true"
+            echo "UPDATED=true" >> $GITHUB_ENV
           else
-            echo "::set-output name=updated::false"
+            echo "UPDATED=false" >> $GITHUB_ENV
           fi
       
       - name: Merge GFWlist and publish
-        if: steps.check.outputs.updated == 'true'
+        if: env.UPDATED == 'true'
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
@@ -45,7 +46,7 @@ jobs:
           git push
       
       - name: Create release
-        if: steps.check.outputs.updated == 'true'
+        if: env.UPDATED == 'true'
         uses: actions/create-release@v1
         with:
           tag_name: v${{ github.run_number }}
@@ -56,7 +57,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.FLOW_TOKEN }}
       
       - name: Upload autoproxy.txt
-        if: steps.check.outputs.updated == 'true'
+        if: env.UPDATED == 'true'
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
