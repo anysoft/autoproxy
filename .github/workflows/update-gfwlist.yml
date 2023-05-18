@@ -41,7 +41,7 @@ jobs:
           fi
       
       - name: Merge GFWlist and publish
-        if: env.UPDATED_GFW == 'true'
+        # if: env.UPDATED_GFW == 'true'
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.FLOW_TOKEN }}
