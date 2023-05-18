@@ -1,5 +1,7 @@
 # autoproxy
-autoproxy 自动拉取[gfwlist](https://github.com/gfwlist/gfwlist)并加入 `personal_rules.txt`  最后合并成 `autoproxy.txt`
+  此脚本主要通过 GitHub actions 定时 自动拉取[gfwlist](https://github.com/gfwlist/gfwlist)并加入 `personal_rules.txt`  最后合并成 `autoproxy.txt` 并`push`代码和自动发布`release`
+## autoproxy.txt
+可供 `SwitchyOmega` 情景模式更新，避免因为情景模式过大导致`Chrome/Edge` 下无法自动同步插件情景模式数据
 
 
 
@@ -41,3 +43,11 @@ youtube.com
 ```
 ## 其他
 autoproxy其实规则核心是adp 1.1，规则写法同adp一样的，可以到adp官网学习，
+[撰写 Adblock Plus 过滤规则](https://adblockplus.org/zh_CN/filters)
+
+
+
+# 参考
+[sunshineplan/autoproxy](https://github.com/sunshineplan/autoproxy)
+[AutoProxy代理规则简单写法](http://mydf.github.io/blog/autoproxy/)
+[gfwlist/gfwlist](https://github.com/gfwlist/gfwlist)
