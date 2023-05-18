@@ -3,6 +3,7 @@ name: Update Autoproxy
 on:
   schedule:
     - cron: "0 0 * * *" # 每天 UTC 时间 00:00 执行
+  workflow_dispatch: 
 
 jobs:
   update:
