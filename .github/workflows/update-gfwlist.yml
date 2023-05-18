@@ -37,9 +37,11 @@ jobs:
       
       - name: Merge GFWlist and publish
         if: env.UPDATED == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.FLOW_TOKEN }}
         run: |
           git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.email github-actions[bot]@users.noreply.github.com
           python merge-gfwlist.py
           git add autoproxy.txt
           git commit -m "Update autoproxy.txt"
