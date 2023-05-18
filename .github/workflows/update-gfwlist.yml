@@ -34,27 +34,35 @@ jobs:
           last_commit_date=$(date -u -d "$last_commit_date" +%s)
           current_date=$(date -u +%s)
           time_diff=$((current_date - last_commit_date))
-          if ((time_diff < 8886400)); then
-            echo "UPDATED=true" >> $GITHUB_ENV
+          if ((time_diff < 86400)); then
+            echo "UPDATED_GFW=true" >> $GITHUB_ENV
           else
-            echo "UPDATED=false" >> $GITHUB_ENV
+            echo "UPDATED_GFW=false" >> $GITHUB_ENV
           fi
       
       - name: Merge GFWlist and publish
-        if: env.UPDATED == 'true'
+        if: env.UPDATED_GFW == 'true'
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.FLOW_TOKEN }}
         run: |
           git config user.name github-actions
           git config user.email github-actions[bot]@users.noreply.github.com
+          md5_old=$(md5sum autoproxy.txt)
           python merge-gfwlist.py
-          git add autoproxy.txt
-          git commit -m "Update autoproxy.txt"
-          git push
+          md5_current=$(md5sum autoproxy.txt)
+          if [ "$md5_old" != "$md5_current" ]; then
+            echo "UPDATED_PERSONAL=false" >> $GITHUB_ENV
+          else
+            echo "UPDATED_PERSONAL=true" >> $GITHUB_ENV
+            git add autoproxy.txt
+            git commit -m "Update autoproxy.txt"
+            git push
+          fi
+          
 
       - name: Create release
-        if: env.UPDATED == 'true'
+        if: env.UPDATED_GFW == 'true' || env.UPDATED_PERSONAL == 'true'
         continue-on-error: true
         uses: softprops/action-gh-release@v1
         with:
@@ -66,7 +74,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.FLOW_TOKEN }}
       
       # - name: Create release
-      #   if: env.UPDATED == 'true'
+      #   if: env.UPDATED_GFW == 'true'
       #   continue-on-error: true
       #   uses: actions/create-release@v1
       #   with:
@@ -78,7 +86,7 @@ jobs:
       #     GITHUB_TOKEN: ${{ secrets.FLOW_TOKEN }}
       
       # - name: Upload autoproxy.txt
-      #   if: env.UPDATED == 'true'
+      #   if: env.UPDATED_GFW == 'true'
       #   continue-on-error: true
       #   uses: actions/upload-release-asset@v1
       #   with:
