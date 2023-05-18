@@ -52,9 +52,9 @@ jobs:
           python merge-gfwlist.py
           md5_current=$(md5sum autoproxy.txt)
           if [ "$md5_old" != "$md5_current" ]; then
-            echo "UPDATED_PERSONAL=false" >> $GITHUB_ENV
-          else
             echo "UPDATED_PERSONAL=true" >> $GITHUB_ENV
+          else
+            echo "UPDATED_PERSONAL=false" >> $GITHUB_ENV
             git add autoproxy.txt
             git commit -m "Update autoproxy.txt"
             git push
