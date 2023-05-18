@@ -16,7 +16,7 @@ jobs:
           token: ${{ secrets.FLOW_TOKEN }}
       
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: 3.x
       
@@ -48,25 +48,14 @@ jobs:
           git add autoproxy.txt
           git commit -m "Update autoproxy.txt"
           git push
-      
+
       - name: Create release
         if: env.UPDATED == 'true'
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         with:
+          files: ./autoproxy.txt
           tag_name: v${{ github.run_number }}
           release_name: Autoproxy Release v${{ github.run_number }}
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.FLOW_TOKEN }}
-      
-      - name: Upload autoproxy.txt
-        if: env.UPDATED == 'true'
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./autoproxy.txt
-          asset_name: autoproxy.txt
-          asset_content_type: text/plain
+          body: Release description
         env:
           GITHUB_TOKEN: ${{ secrets.FLOW_TOKEN }}
