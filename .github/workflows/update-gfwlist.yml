@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: "0 0 * * *" # 每天 UTC 时间 00:00 执行
   workflow_dispatch: 
+  push:
+    branches:
+      - main
 
 jobs:
   update:
@@ -57,5 +60,28 @@ jobs:
           tag_name: v${{ github.run_number }}
           release_name: Autoproxy Release v${{ github.run_number }}
           body: Release description
+        env:
+          GITHUB_TOKEN: ${{ secrets.FLOW_TOKEN }}
+      
+      - name: Create release
+        if: env.UPDATED == 'true'
+        uses: actions/create-release@v1
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: Autoproxy Release v${{ github.run_number }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.FLOW_TOKEN }}
+      
+      - name: Upload autoproxy.txt
+        if: env.UPDATED == 'true'
+        continue-on-error: true
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./autoproxy.txt
+          asset_name: autoproxy.txt
+          asset_content_type: text/plain
         env:
           GITHUB_TOKEN: ${{ secrets.FLOW_TOKEN }}
