@@ -1,2 +1,6 @@
-microsoft365.com
-sharepoint.com
+||microsoft365.com
+||sharepoint.com
+||blockscan.com
+||etherscan
+||bscscan.com
+||tronscan.org
