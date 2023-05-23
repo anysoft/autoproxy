@@ -4,3 +4,5 @@
 ||etherscan
 ||bscscan.com
 ||tronscan.org
+||marketplace.atlassian.com
+||atlassian.com
