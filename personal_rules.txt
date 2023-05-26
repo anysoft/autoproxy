@@ -6,3 +6,4 @@
 ||tronscan.org
 ||marketplace.atlassian.com
 ||atlassian.com
+||python.org
