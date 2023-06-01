@@ -6,6 +6,9 @@
 ||bscscan.com
 ||tronscan.org
 ||blocktempo.com
+||defillama.com
+||stargate.finance
+
 ### org service
 ||marketplace.atlassian.com
 ||atlassian.com
