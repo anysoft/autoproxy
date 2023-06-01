@@ -1,9 +1,12 @@
 ||microsoft365.com
 ||sharepoint.com
+### blockchain
 ||blockscan.com
 ||etherscan
 ||bscscan.com
 ||tronscan.org
+||blocktempo.com
+### org service
 ||marketplace.atlassian.com
 ||atlassian.com
 ||python.org
