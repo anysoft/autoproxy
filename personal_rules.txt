@@ -1,5 +1,6 @@
 ||microsoft365.com
 ||sharepoint.com
+||visualstudio.com
 ### blockchain
 ||blockscan.com
 ||etherscan
