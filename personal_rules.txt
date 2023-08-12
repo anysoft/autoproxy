@@ -3,6 +3,7 @@
 ||visualstudio.com
 ||msecnd.net
 ||microsoftonline.com
+||office.com
 
 ### blockchain
 ||blockscan.com
