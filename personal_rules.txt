@@ -2,6 +2,8 @@
 ||sharepoint.com
 ||visualstudio.com
 ||msecnd.net
+||microsoftonline.com
+
 ### blockchain
 ||blockscan.com
 ||etherscan
