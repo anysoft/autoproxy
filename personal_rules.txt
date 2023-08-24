@@ -5,6 +5,14 @@
 ||microsoftonline.com
 ||office.com
 
+||byteoversea.com
+||fonts.googleapis.com
+||google-analytics.com
+||geonode.com
+
+
+||navicat.com
+
 ### blockchain
 ||blockscan.com
 ||etherscan
