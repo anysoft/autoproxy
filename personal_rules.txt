@@ -26,6 +26,8 @@
 
 ||bnbstatic.com
 
+||mirror.xyz
+
 ### org service
 ||marketplace.atlassian.com
 ||atlassian.com
@@ -37,3 +39,4 @@
 ||awswaf.com
 ||zhile.io
 ||temp-mail.org
+
