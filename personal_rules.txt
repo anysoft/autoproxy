@@ -12,6 +12,7 @@
 
 
 ||navicat.com
+||.cloudflare.com
 
 ### blockchain
 ||blockscan.com
@@ -21,8 +22,18 @@
 ||blocktempo.com
 ||defillama.com
 ||stargate.finance
+||polygon.technology
+
+||bnbstatic.com
 
 ### org service
 ||marketplace.atlassian.com
 ||atlassian.com
 ||python.org
+
+
+
+### others
+||awswaf.com
+||zhile.io
+||temp-mail.org
