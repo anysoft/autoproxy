@@ -3,96 +3,59 @@ name: Update Autoproxy
 on:
   schedule:
     - cron: "0 0 * * *" # 每天 UTC 时间 00:00 执行
-  workflow_dispatch: 
+  workflow_dispatch:
   push:
     branches:
       - main
 
+permissions:
+  contents: write
+
+concurrency:
+  group: update-autoproxy
+  cancel-in-progress: false
+
 jobs:
   update:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
-          token: ${{ secrets.FLOW_TOKEN }}
-      
+          ref: main
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         with:
-          python-version: 3.x
-      
+          python-version: "3.13"
+
       - name: Install dependencies
-        run: pip install requests
-      
-      - name: Check upstream repository
-        id: check
         run: |
-          last_commit=$(curl --silent "https://api.github.com/repos/gfwlist/gfwlist/commits?per_page=1" | grep -oP '(?<="date": ")[^"]+')
-          last_commit_date=$(echo "$last_commit" | head -n1)
-          last_commit_date=$(date -u -d "$last_commit_date" +%s)
-          current_date=$(date -u +%s)
-          time_diff=$((current_date - last_commit_date))
-          if ((time_diff < 86400)); then
-            echo "UPDATED_GFW=true" >> $GITHUB_ENV
-          else
-            echo "UPDATED_GFW=false" >> $GITHUB_ENV
-          fi
-      
+          python -m pip install --upgrade pip
+          python -m pip install requests
+
       - name: Merge GFWlist and publish
-        # if: env.UPDATED_GFW == 'true'
-        continue-on-error: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.FLOW_TOKEN }}
+        id: merge
         run: |
-          git config user.name github-actions
-          git config user.email github-actions[bot]@users.noreply.github.com
-          md5_old=$(md5sum autoproxy.txt)
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           python merge-gfwlist.py
-          md5_current=$(md5sum autoproxy.txt)
-          if [ "$md5_old" != "$md5_current" ]; then
-            echo "UPDATED_PERSONAL=true" >> $GITHUB_ENV
+          if git diff --quiet -- autoproxy.txt; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
             git add autoproxy.txt
             git commit -m "Update autoproxy.txt"
-            git push
-          else
-            echo "UPDATED_PERSONAL=false" >> $GITHUB_ENV
+            git push origin HEAD:main
           fi
-          
 
       - name: Create release
-        if: env.UPDATED_GFW == 'true' || env.UPDATED_PERSONAL == 'true'
-        continue-on-error: true
-        uses: softprops/action-gh-release@v1
+        if: steps.merge.outputs.changed == 'true'
+        uses: softprops/action-gh-release@v3
         with:
-          files: ./autoproxy.txt
+          files: autoproxy.txt
           tag_name: v${{ github.run_number }}
-          release_name: Autoproxy Release v${{ github.run_number }}
-          body: Release description
-        env:
-          GITHUB_TOKEN: ${{ secrets.FLOW_TOKEN }}
-      
-      # - name: Create release
-      #   if: env.UPDATED_GFW == 'true'
-      #   continue-on-error: true
-      #   uses: actions/create-release@v1
-      #   with:
-      #     tag_name: v${{ github.run_number }}
-      #     release_name: Autoproxy Release v${{ github.run_number }}
-      #     draft: false
-      #     prerelease: false
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.FLOW_TOKEN }}
-      
-      # - name: Upload autoproxy.txt
-      #   if: env.UPDATED_GFW == 'true'
-      #   continue-on-error: true
-      #   uses: actions/upload-release-asset@v1
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: ./autoproxy.txt
-      #     asset_name: autoproxy.txt
-      #     asset_content_type: text/plain
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.FLOW_TOKEN }}
+          target_commitish: main
+          name: Autoproxy Release v${{ github.run_number }}
+          body: Automated release for updated autoproxy.txt.

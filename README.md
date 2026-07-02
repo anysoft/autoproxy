@@ -1,5 +1,11 @@
 # autoproxy
   此脚本主要通过 GitHub actions 定时 自动拉取[gfwlist](https://github.com/gfwlist/gfwlist)并加入 `personal_rules.txt`  最后合并成 `autoproxy.txt` 并`push`代码和自动发布`release`
+
+## 自动更新
+GitHub Actions 使用仓库自动生成的 `GITHUB_TOKEN` 推送 `autoproxy.txt` 并创建 Release，不需要额外配置 `FLOW_TOKEN` 或个人访问令牌。
+
+如果组织或仓库策略禁用了 `GITHUB_TOKEN` 写权限，需要在仓库 `Settings -> Actions -> General -> Workflow permissions` 中允许工作流写入仓库内容。
+
 ## autoproxy.txt
 可供 `SwitchyOmega` 情景模式更新，避免因为情景模式过大导致`Chrome/Edge` 下无法自动同步插件情景模式数据
 
